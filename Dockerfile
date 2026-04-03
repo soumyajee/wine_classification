@@ -1,9 +1,17 @@
-FROM python:3.8.5-slim-buster
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY . /app
+# Install system dependencies if needed
+RUN apt-get update && apt-get install -y \
+    gcc \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install -r requirements.txt
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 CMD ["python3", "app.py"]
